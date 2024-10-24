@@ -32,11 +32,32 @@ git clone https://github.com/HemantKumar01/ToDo-DApp.git
 cd ToDo-DApp
 npm install
 ```
-Once installed, let's run Hardhat's testing network:
+## 🏃 Running the Dapp
+First create a `.env` file in the `frontend` directory and add the following:
+```sh
+REACT_APP_PINATA_API_KEY=<YOUR_PINATA_API_KEY>
+REACT_APP_PINATA_SECRET_KEY=<YOUR_PINATA_SECRET_KEY>
+```
 
+Run the following commands to start the frontend:
+```sh
+cd frontend
+npm install
+npm start
+```
+
+Open [http://localhost:3000/](http://localhost:3000/) to see your Dapp. You will
+need to have [Coinbase Wallet](https://www.coinbase.com/wallet) or [Metamask](https://metamask.io) installed.
+> Note: If you are using a devnet, you will need to start a hardhat node first, refer below for deploying the contract.
+
+
+## 🚀 Deploying the Contract
+### Method 1: Hardhat DevNet (Faster, Local)
+set the chain_id in `frontend/src/Dapp.js` to `31337` and run the following commands:
 ```sh
 npx hardhat node
 ```
+> Then Setup Metamask or any other wallet by creating a new account with private key of any account out of 20 given by hardhat node and chain id as `31337`.
 
 Then, on a new terminal, go to the repository's root folder and run this to
 deploy your contract:
@@ -45,58 +66,17 @@ deploy your contract:
 npx hardhat run scripts/deploy.js --network localhost
 ```
 
-Finally, we can run the frontend with:
-
+Now you can head over to setting up frontend as described later in this readme.
+### Method 2: Sepolia TestNet (Slower, Public)
+create a `.env` file in the root directory and add the following:
 ```sh
-cd frontend
-npm install
-npm start
+INFURA_API_KEY=<YOUR_INFURA_API_KEY>
+SEPOLIA_PRIVATE_KEY=<YOUR_SEPOLIA_PRIVATE_KEY>
+#for this go to your wallet, select sepolia, 
+# then go to account information and copy the private key
+```
+now run
+```sh
+npx hardhat run scripts/deploy.js --network sepolia
 ```
 
-Open [http://localhost:3000/](http://localhost:3000/) to see your Dapp. You will
-need to have [Coinbase Wallet](https://www.coinbase.com/wallet) or [Metamask](https://metamask.io) installed and listening to
-`localhost 8545`.
-
-## User Guide
-
-You can find detailed instructions on using this repository and many tips in [its documentation](https://hardhat.org/tutorial).
-
-- [Writing and compiling contracts](https://hardhat.org/tutorial/writing-and-compiling-contracts/)
-- [Setting up the environment](https://hardhat.org/tutorial/setting-up-the-environment/)
-- [Testing Contracts](https://hardhat.org/tutorial/testing-contracts/)
-- [Setting up your wallet](https://hardhat.org/tutorial/boilerplate-project#how-to-use-it)
-- [Hardhat's full documentation](https://hardhat.org/docs/)
-
-For a complete introduction to Hardhat, refer to [this guide](https://hardhat.org/getting-started/#overview).
-
-## What's Included?
-
-This repository uses our recommended hardhat setup, by using our [`@nomicfoundation/hardhat-toolbox`](https://hardhat.org/hardhat-runner/plugins/nomicfoundation-hardhat-toolbox). When you use this plugin, you'll be able to:
-
-- Deploy and interact with your contracts using [ethers.js](https://docs.ethers.io/v5/) and the [`hardhat-ethers`](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-ethers) plugin.
-- Test your contracts with [Mocha](https://mochajs.org/), [Chai](https://chaijs.com/) and our own [Hardhat Chai Matchers](https://hardhat.org/hardhat-chai-matchers) plugin.
-- Interact with Hardhat Network with our [Hardhat Network Helpers](https://hardhat.org/hardhat-network-helpers).
-- Verify the source code of your contracts with the [hardhat-etherscan](https://hardhat.org/hardhat-runner/plugins/nomiclabs-hardhat-etherscan) plugin.
-- Get metrics on the gas used by your contracts with the [hardhat-gas-reporter](https://github.com/cgewecke/hardhat-gas-reporter) plugin.
-- Measure your tests coverage with [solidity-coverage](https://github.com/sc-forks/solidity-coverage).
-
-This project also includes [a sample frontend/Dapp](./frontend), which uses [Create React App](https://github.com/facebook/create-react-app).
-
-## Troubleshooting
-
-- `Invalid nonce` errors: if you are seeing this error on the `npx hardhat node`
-  console, try resetting your Metamask account. This will reset the account's
-  transaction history and also the nonce. Open Metamask, click on your account
-  followed by `Settings > Advanced > Clear activity tab data`.
-
-## Setting up your editor
-
-[Hardhat for Visual Studio Code](https://hardhat.org/hardhat-vscode) is the official Hardhat extension that adds advanced support for Solidity to VSCode. If you use Visual Studio Code, give it a try!
-
-## Getting help and updates
-
-If you need help with this project, or with Hardhat in general, please read [this guide](https://hardhat.org/hardhat-runner/docs/guides/getting-help) to learn where and how to get it.
-
-For the latest news about Hardhat, [follow us on Twitter](https://twitter.com/HardhatHQ), and don't forget to star [our GitHub repository](https://github.com/NomicFoundation/hardhat)!
-
-**Happy _building_!**

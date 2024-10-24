@@ -12,7 +12,7 @@ import { Loading } from "./Loading";
 import { TransactionErrorMessage } from "./TransactionErrorMessage";
 import { WaitingForTransactionMessage } from "./WaitingForTransactionMessage";
 
-const HARDHAT_NETWORK_ID = "31337";
+const chain_id = "11155111";
 const ERROR_CODE_TX_REJECTED_BY_USER = 4001;
 
 // Pinata configuration
@@ -184,7 +184,7 @@ export function Dapp() {
 
   // Switch chain
   const switchChain = async () => {
-    const chainIdHex = `0x${HARDHAT_NETWORK_ID.toString(16)}`;
+    const chainIdHex = `0x${chain_id.toString(16)}`;
     await window.ethereum.request({
       method: "wallet_switchEthereumChain",
       params: [{ chainId: chainIdHex }],
@@ -194,7 +194,7 @@ export function Dapp() {
 
   // Check network
   const checkNetwork = () => {
-    if (window.ethereum.networkVersion !== HARDHAT_NETWORK_ID) {
+    if (window.ethereum.networkVersion !== chain_id) {
       switchChain();
     }
   };

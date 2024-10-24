@@ -1,9 +1,14 @@
 require("@nomicfoundation/hardhat-toolbox");
 
-// The next line is part of the sample project, you don't need it in your
-// project. It imports a Hardhat task definition, that can be used for
-// testing the frontend.
 require("./tasks/faucet");
+require("dotenv").config();
+
+// const { vars } = require("hardhat/config");
+// const INFURA_API_KEY = vars.get("INFURA_API_KEY");
+// const SEPOLIA_PRIVATE_KEY = vars.get("SEPOLIA_PRIVATE_KEY");
+
+const INFURA_API_KEY = process.env.INFURA_API_KEY;
+const SEPOLIA_PRIVATE_KEY = process.env.SEPOLIA_PRIVATE_KEY;
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -11,6 +16,10 @@ module.exports = {
   networks: {
     hardhat: {
       chainId: 31337,
+    },
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/${INFURA_API_KEY}`,
+      accounts: [SEPOLIA_PRIVATE_KEY],
     },
   },
 };
