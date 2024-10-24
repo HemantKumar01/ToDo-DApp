@@ -32,13 +32,13 @@ git clone https://github.com/HemantKumar01/ToDo-DApp.git
 cd ToDo-DApp
 npm install
 ```
-## 🏃 Running the Dapp
+## 🗃️ IPFS Setup
 First create a `.env` file in the `frontend` directory and add the following:
 ```sh
 REACT_APP_PINATA_API_KEY=<YOUR_PINATA_API_KEY>
 REACT_APP_PINATA_SECRET_KEY=<YOUR_PINATA_SECRET_KEY>
 ```
-
+## 🏃 Running the DApp
 Run the following commands to start the frontend:
 ```sh
 cd frontend
@@ -80,3 +80,8 @@ now run
 npx hardhat run scripts/deploy.js --network sepolia
 ```
 
+## Interacting with the deployed smart contract
+You can interact with the deployed smart contract using the frontend. You can add tasks, mark them as completed, and remove them.
+![ConnectWallet](<Screenshot 2024-10-24 182608.png>)
+![Main Page](<Screenshot 2024-10-24 191659.png>)
+![add task](<Screenshot 2024-10-24 191704.png>)

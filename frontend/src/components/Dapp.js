@@ -30,6 +30,9 @@ export function Dapp() {
   const [pollDataInterval, setPollDataInterval] = useState();
   const [taskContents, setTaskContents] = useState({});
 
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   // Function to upload to IPFS via Pinata
   const uploadToPinata = async (content) => {
     try {
@@ -307,98 +310,288 @@ export function Dapp() {
   }
 
   return (
-    <div className="container p-4">
-      <div className="row">
-        <div className="col-12">
-          <h1>Todo List</h1>
-          <p>
-            Welcome <b>{selectedAddress}</b>
-          </p>
-        </div>
-      </div>
-
-      <hr />
-
-      <div className="row">
-        <div className="col-12">
-          {txBeingSent && <WaitingForTransactionMessage txHash={txBeingSent} />}
-
-          {transactionError && (
-            <TransactionErrorMessage
-              message={
-                transactionError.data?.message || transactionError.message
-              }
-              dismiss={() => setTransactionError(undefined)}
+    <div
+      className=""
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        width: "100vw",
+        padding: "30px",
+        background: "linear-gradient(-45deg, #6596ff, #b700ff)",
+        fontFamily: "Poppins, Roboto, sans-serif",
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "#000000c7",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: "100",
+          display: showAddModal ? "grid" : "none",
+          placeContent: "center",
+        }}
+      >
+        <form
+          style={{
+            padding: "50px",
+            background: "#ffffff",
+            minHeight: "50vh",
+            minWidth: "30vw",
+            borderRadius: "30px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexDirection: "column",
+          }}
+          onSubmit={(event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            createTask(formData.get("taskContent"));
+            event.target.reset();
+            setShowAddModal(false);
+          }}
+        >
+          <h3>Add New Task</h3>
+          <div className="form-group">
+            <input
+              className="form-control"
+              type="text"
+              name="taskContent"
+              placeholder="Enter Task"
+              required
+              style={{
+                paddingBlock: "25px",
+                fontSize: "1.5em",
+              }}
             />
-          )}
-        </div>
-      </div>
-
-      <div className="row">
-        <div className="col-12">
-          {/* Add new task form */}
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-              const formData = new FormData(event.target);
-              createTask(formData.get("taskContent"));
-              event.target.reset();
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              gap: "20px",
             }}
           >
-            <div className="form-group">
-              <input
-                className="form-control"
-                type="text"
-                name="taskContent"
-                placeholder="Enter new task"
-                required
-              />
-            </div>
-            <button type="submit" className="btn btn-primary">
+            <button
+              className="btn btn-secondary"
+              style={{
+                padding: "10px 20px",
+              }}
+              onClick={(e) => {
+                e.preventDefault();
+                setShowAddModal(false);
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="btn btn-primary"
+              style={{
+                padding: "10px 20px",
+              }}
+            >
               Add Task
             </button>
-          </form>
+          </div>
+        </form>
+      </div>
+      <div
+        className=""
+        style={{
+          width: "max(100%, 300px)",
+          height: "90vh",
+          background: "#ffffffac",
+          backdropFilter: "blur(10px)",
+          display: "flex",
+          justifyContent: "flex-start",
+          alignItems: "center",
+          flexDirection: "column",
+          borderRadius: "20px",
+          paddingBlock: "50px",
+          paddingInline: "50px",
+          overflow: "auto",
+        }}
+      >
+        <div>
+          <div
+            className=""
+            style={{
+              textAlign: "center",
+            }}
+          >
+            <h1>Todo List</h1>
+            <p>
+              Welcome <b>{selectedAddress}</b>
+            </p>
+          </div>
+        </div>
 
-          {/* Task list */}
-          <div className="mt-4">
-            <h2>Your Tasks</h2>
-            {tasks.map((task, index) => (
-              <div key={index} className="card mb-2">
-                <div className="card-body d-flex justify-content-between align-items-center">
-                  <div>
-                    <p
-                      className={task.isCompleted ? "text-muted mb-0" : "mb-0"}
-                    >
-                      {taskContents[task.ipfsHash] || "Loading..."}
-                    </p>
-                    <small className="text-muted">
-                      Created:{" "}
-                      {new Date(task.createdAt * 1000).toLocaleString()}
-                    </small>
-                    <br />
-                    <small className="text-muted">
-                      IPFS Hash: {task.ipfsHash}
-                    </small>
-                  </div>
-                  <div>
-                    {!task.isCompleted && (
-                      <button
-                        className="btn btn-success btn-sm mr-2"
-                        onClick={() => completeTask(index)}
-                      >
-                        Complete
-                      </button>
-                    )}
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => deleteTask(index)}
-                    >
-                      Delete
-                    </button>
-                  </div>
+        <hr />
+
+        <button
+          className="btn"
+          style={{
+            background: "#b700ff",
+            color: "white",
+            padding: "10px 20px",
+          }}
+          onClick={() => {
+            setShowAddModal(true);
+          }}
+        >
+          + Add Task
+        </button>
+        <div className="">
+          <div className="">
+            {/* Add new task form */}
+
+            {/* Task list */}
+            <div className="mt-4">
+              <h2
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
+                Your Tasks
+              </h2>
+              <div className="">
+                <div className="col-12">
+                  {txBeingSent && (
+                    <WaitingForTransactionMessage txHash={txBeingSent} />
+                  )}
+
+                  {transactionError && (
+                    <TransactionErrorMessage
+                      message={
+                        transactionError.data?.message ||
+                        transactionError.message
+                      }
+                      dismiss={() => setTransactionError(undefined)}
+                    />
+                  )}
                 </div>
               </div>
-            ))}
+              <div>
+                {tasks.map((task, index) => (
+                  <div
+                    key={index}
+                    className="card mb-2"
+                    style={{
+                      borderRadius: "10px",
+                      background: task.isCompleted ? "#00ffa227" : "#ffffff58",
+                      border: "none",
+                      boxShadow: task.isCompleted
+                        ? "5px 5px 0 #008e5a"
+                        : "5px 5px 0 #b700ff",
+                      marginBlock: "20px",
+                      paddingInline: "30px",
+                      paddingLeft: "55px",
+                    }}
+                  >
+                    <button
+                      className="btn"
+                      style={{
+                        position: "absolute",
+                        left: "20px",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        color: "#008e5a",
+                        background: task.isCompleted
+                          ? "#00ffa255"
+                          : "transparent",
+                        border: "2px solid currentColor",
+                        borderRadius: "10px",
+                        width: "30px",
+                        height: "30px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: 0,
+                      }}
+                      onClick={() => completeTask(index)}
+                    >
+                      {task.isCompleted && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-check-check"
+                        >
+                          <path d="M18 6 7 17l-5-5" />
+                          <path d="m22 10-7.5 7.5L13 16" />
+                        </svg>
+                      )}
+                    </button>
+
+                    <div className="card-body d-flex justify-content-between align-items-center">
+                      <div>
+                        <p
+                          className="mb-0"
+                          style={{
+                            textDecoration: task.isCompleted
+                              ? "line-through"
+                              : "none",
+                          }}
+                        >
+                          {taskContents[task.ipfsHash] || "Loading..."}
+                        </p>
+                        <small className="text-muted">
+                          Created:{" "}
+                          {new Date(task.createdAt * 1000).toLocaleString()}
+                        </small>
+                        <br />
+                        <small className="text-muted">
+                          IPFS Hash: {task.ipfsHash}
+                        </small>
+                      </div>
+                      <div>
+                        <button
+                          className=""
+                          style={{
+                            color: "#9e0000c0",
+                            background: "transparent",
+                            border: "none",
+                          }}
+                          onClick={() => deleteTask(index)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="lucide lucide-trash-2"
+                          >
+                            <path d="M3 6h18" />
+                            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                            <line x1="10" x2="10" y1="11" y2="17" />
+                            <line x1="14" x2="14" y1="11" y2="17" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>
