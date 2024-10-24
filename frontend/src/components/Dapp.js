@@ -36,6 +36,7 @@ export function Dapp() {
   // Function to upload to IPFS via Pinata
   const uploadToPinata = async (content) => {
     try {
+      setLoading(true);
       const data = JSON.stringify({
         pinataOptions: {
           cidVersion: 1,
@@ -60,7 +61,7 @@ export function Dapp() {
           },
         }
       );
-
+      setLoading(false);
       return response.data.IpfsHash;
     } catch (error) {
       console.error("Error uploading to Pinata:", error);
@@ -323,6 +324,35 @@ export function Dapp() {
         fontFamily: "Poppins, Roboto, sans-serif",
       }}
     >
+      <div
+        style={{
+          backgroundColor: "#000000c7",
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          zIndex: "100",
+          display: loading ? "flex" : "none",
+          justifyContent: "center",
+          alignItems: "center",
+          flexDirection: "column",
+        }}
+      >
+        <div class="spinner-border text-light" role="status"></div>
+        <span
+          class=""
+          style={{
+            color: "white",
+            textAlign: "center",
+            marginTop: "10px",
+            fontSize: "1.1em",
+          }}
+        >
+          Uploading to IPFS..
+        </span>
+      </div>
+
       <div
         style={{
           backgroundColor: "#000000c7",
